@@ -91,11 +91,23 @@ class RSSNewsProvider extends BaseNewsProvider {
       const pubDateMatch = /<pubDate>([\s\S]*?)<\/pubDate>/i.exec(itemContent);
       const publishedAt = pubDateMatch ? new Date(pubDateMatch[1]).toISOString() : new Date().toISOString();
 
-      // Extract description
+      // Extract description & sanitize HTML entities
       const descMatch = /<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i.exec(itemContent);
-      let description = descMatch ? descMatch[1].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim() : '';
-      if (!description || description.length < 20) {
-        description = `Latest breaking report and editorial analysis from ${sourceName}.`;
+      let description = descMatch ? descMatch[1] : '';
+      
+      // Decode HTML entities & strip tags
+      description = description
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!description || description.length < 25) {
+        description = `${rawTitle}. Latest breaking report, background context, and verified analysis from ${sourceName}.`;
       }
 
       // Auto-detect category from text
