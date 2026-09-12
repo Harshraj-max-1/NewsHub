@@ -267,7 +267,8 @@ class NewsService {
       }
     }
 
-    return result;
+    // Sort strictly latest first so newest breaking dispatches appear on Page 1
+    return result.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
   }
 }
 

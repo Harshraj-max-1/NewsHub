@@ -207,8 +207,8 @@ class RSSNewsProvider extends BaseNewsProvider {
       const linkMatch = /<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/i.exec(itemContent);
       const articleUrl = linkMatch ? linkMatch[1].trim() : '#';
 
-      // Extract pubDate
-      const pubDateMatch = /<pubDate>([\s\S]*?)<\/pubDate>/i.exec(itemContent);
+      // Extract pubDate, dc:date, or published
+      const pubDateMatch = /<(?:pubDate|dc:date|published)>([\s\S]*?)<\/(?:pubDate|dc:date|published)>/i.exec(itemContent);
       let publishedAt = new Date().toISOString();
       if (pubDateMatch && pubDateMatch[1]) {
         try {
@@ -358,6 +358,9 @@ class RSSNewsProvider extends BaseNewsProvider {
         unique.push(a);
       }
     }
+
+    // Sort strictly latest first so newest breaking news appears on early pages
+    unique.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
     return unique;
   }
