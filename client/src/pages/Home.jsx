@@ -1,0 +1,185 @@
+import React, { useEffect, useState, useCallback } from 'react';
+import api from '../services/api';
+import { useEditionStore } from '../store/editionStore';
+import FeaturedArticle from '../components/news/FeaturedArticle';
+import ArticleCard from '../components/news/ArticleCard';
+import NewsGrid from '../components/news/NewsGrid';
+import BreakingTicker from '../components/news/BreakingTicker';
+import CategoryTabs from '../components/news/CategoryTabs';
+import { FeaturedArticleSkeleton } from '../components/common/LoadingSkeleton';
+import LoadingSkeleton from '../components/common/LoadingSkeleton';
+import { EmptyState, ErrorState, Pagination } from '../components/common/CommonStates';
+import { Link } from 'react-router-dom';
+import { Sparkles, TrendingUp, Compass, ArrowRight, Globe } from 'lucide-react';
+import { INDIA_SOURCES, GLOBAL_SOURCES } from '../utils/formatters';
+
+export default function Home() {
+  const { edition, setEdition } = useEditionStore();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [articles, setArticles] = useState([]);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchHeadlines = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      let endpoint = activeCategory === 'all'
+        ? `/news/top?region=${edition}&page=${page}&limit=12`
+        : `/news/category/${activeCategory}?region=${edition}&page=${page}&limit=12`;
+
+      const res = await api.get(endpoint);
+      const data = res.data?.data;
+      setArticles(data?.articles || []);
+      setTotalPages(Math.ceil((data?.totalResults || 12) / 12));
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to fetch stories.');
+    } finally {
+      setLoading(false);
+    }
+  }, [edition, activeCategory, page]);
+
+  useEffect(() => {
+    fetchHeadlines();
+  }, [fetchHeadlines]);
+
+  const handleCategoryChange = (catId) => {
+    setActiveCategory(catId);
+    setPage(1);
+  };
+
+  const featured = articles[0];
+  const secondary = articles.slice(1, 3);
+  const remaining = articles.slice(3);
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-300">
+      {/* Breaking News Ticker */}
+      <BreakingTicker articles={articles} />
+
+      {/* Hero Header Strip with Region Info */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between pb-4 border-b border-neutral-900 dark:border-neutral-100 gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
+              {edition === 'india' ? '🇮🇳 India National & Regional Dispatch' : edition === 'global' ? '🌐 International Global Wire' : 'Global & National Synthesis'}
+            </span>
+          </div>
+          <h1 className="font-editorial text-3xl sm:text-5xl font-semibold text-neutral-950 dark:text-white tracking-tight">
+            {edition === 'india' ? 'India Front Page' : edition === 'global' ? 'Global Dispatches' : "Today's Front Page"}
+          </h1>
+        </div>
+
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider flex-wrap">
+          <Link
+            to="/global"
+            className="flex items-center gap-1.5 px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-900 dark:hover:border-neutral-100 text-neutral-800 dark:text-neutral-200 transition-colors"
+          >
+            <Globe size={13} className="text-blue-500" />
+            <span>Read Only Global News</span>
+          </Link>
+          <Link
+            to="/for-you"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-850 hover:bg-neutral-200 dark:hover:bg-neutral-750 text-neutral-900 dark:text-neutral-100 transition-colors"
+          >
+            <Sparkles size={13} className="text-amber-500" />
+            <span>Personalized For You</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Category Tabs */}
+      <CategoryTabs activeCategory={activeCategory} onSelectCategory={handleCategoryChange} />
+
+      {/* Main Content Area */}
+      {loading ? (
+        <div className="space-y-8">
+          <FeaturedArticleSkeleton />
+          <LoadingSkeleton count={6} />
+        </div>
+      ) : error ? (
+        <ErrorState onRetry={fetchHeadlines} message={error} />
+      ) : articles.length === 0 ? (
+        <EmptyState
+          title={`No stories found for ${activeCategory}`}
+          description="Try switching between India and Global editions or explore other topics."
+        />
+      ) : (
+        <>
+          {/* Featured Lead Story (Only on page 1) */}
+          {page === 1 && featured && (
+            <FeaturedArticle article={featured} />
+          )}
+
+          {/* Secondary Lead Row on Page 1 */}
+          {page === 1 && secondary.length > 0 && (
+            <div className="mb-10">
+              <div className="flex items-center justify-between pb-3 mb-6 border-b border-neutral-200 dark:border-neutral-800">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
+                  {edition === 'india' ? 'Top National Developments' : 'Major World Stories'}
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {secondary.map((art) => (
+                  <ArticleCard key={art.id || art.externalId} article={art} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* All Remaining Latest News Grid */}
+          <div className="pt-2">
+            <div className="flex items-center justify-between pb-3 mb-6 border-b border-neutral-200 dark:border-neutral-800">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
+                {page === 1 ? (edition === 'india' ? 'Latest India Dispatches' : 'Latest International Wire') : `Page ${page} Dispatches`}
+              </h3>
+              <span className="text-xs text-neutral-400">
+                Showing {articles.length} verified stories
+              </span>
+            </div>
+            <NewsGrid articles={page === 1 ? remaining : articles} />
+          </div>
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(p) => {
+              setPage(p);
+              window.scrollTo({ top: 300, behavior: 'smooth' });
+            }}
+          />
+
+          {/* Featured Publisher Network Strip */}
+          <div className="mt-16 pt-10 border-t border-neutral-200 dark:border-neutral-800">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <TrendingUp size={16} className="text-neutral-700 dark:text-neutral-300" />
+                <h4 className="text-xs font-bold uppercase tracking-widest text-neutral-900 dark:text-neutral-100">
+                  {edition === 'india' ? 'Indian Journalism Network' : 'Global Publisher Network'}
+                </h4>
+              </div>
+              <Link to="/discover" className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1">
+                <span>View all</span>
+                <ArrowRight size={12} />
+              </Link>
+            </div>
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2">
+              {(edition === 'india' ? INDIA_SOURCES : GLOBAL_SOURCES).map((source) => (
+                <Link
+                  key={source}
+                  to={`/search?source=${encodeURIComponent(source)}`}
+                  className="px-3.5 py-2 bg-white dark:bg-[#181818] border border-neutral-200/90 dark:border-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600 whitespace-nowrap transition-colors"
+                >
+                  {source}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

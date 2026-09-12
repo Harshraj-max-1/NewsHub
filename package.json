@@ -1,0 +1,19 @@
+{
+  "name": "newshub-monorepo",
+  "version": "1.0.0",
+  "description": "NewsHub — Personalized News Platform (MERN Stack)",
+  "scripts": {
+    "dev": "concurrently \"npm --prefix server start\" \"npm --prefix client run dev\"",
+    "server": "npm --prefix server start",
+    "server:dev": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server start",
+    "dev:client": "npm --prefix client run dev",
+    "test": "npm --prefix server test",
+    "test:server": "npm --prefix server test",
+    "build": "npm --prefix client run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.4"
+  }
+}
