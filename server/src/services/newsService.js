@@ -38,15 +38,25 @@ class NewsService {
     const providers = this.getActiveProviders();
     for (const provider of providers) {
       try {
-        const result = await provider.getTopHeadlines({ ...options, region, limit: 40 });
+        const result = await provider.getTopHeadlines({ ...options, region, limit: 80 });
         if (result && result.articles && result.articles.length > 0) {
-          const fallback = await this.fallbackProvider.getTopHeadlines({ ...options, region, limit: 20 });
-          const combined = this.deduplicateArticles([...result.articles, ...(fallback.articles || [])]);
-          
+          let pool = result.articles;
+          // Only supplement with fallback if pool is too small
+          if (pool.length < 10) {
+            const fallback = await this.fallbackProvider.getTopHeadlines({ ...options, region, limit: 20 });
+            pool = [...pool, ...(fallback.articles || [])];
+          }
+
+          const combined = this.deduplicateArticles(pool);
+          const startIndex = (page - 1) * limit;
+          const paginated = combined.slice(startIndex, startIndex + limit);
+
           const finalResult = {
             ...result,
             totalResults: combined.length,
-            articles: combined.slice((page - 1) * limit, ((page - 1) * limit) + limit)
+            page,
+            limit,
+            articles: paginated
           };
 
           cache.set(cacheKey, finalResult, this.cacheTtl);
@@ -76,15 +86,24 @@ class NewsService {
     const providers = this.getActiveProviders();
     for (const provider of providers) {
       try {
-        const result = await provider.getCategoryNews(category, { ...options, region, limit: 40 });
+        const result = await provider.getCategoryNews(category, { ...options, region, limit: 80 });
         if (result && result.articles && result.articles.length > 0) {
-          const fallback = await this.fallbackProvider.getCategoryNews(category, { ...options, region });
-          const combined = this.deduplicateArticles([...result.articles, ...(fallback.articles || [])]);
+          let pool = result.articles;
+          if (pool.length < 10) {
+            const fallback = await this.fallbackProvider.getCategoryNews(category, { ...options, region });
+            pool = [...pool, ...(fallback.articles || [])];
+          }
+
+          const combined = this.deduplicateArticles(pool);
+          const startIndex = (page - 1) * limit;
+          const paginated = combined.slice(startIndex, startIndex + limit);
 
           const finalResult = {
             ...result,
             totalResults: combined.length,
-            articles: combined.slice((page - 1) * limit, ((page - 1) * limit) + limit)
+            page,
+            limit,
+            articles: paginated
           };
 
           cache.set(cacheKey, finalResult, this.cacheTtl);

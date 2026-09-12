@@ -57,13 +57,13 @@ export default function GlobalNews() {
           <div>
             <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
               <Globe size={13} className="text-blue-500" />
-              <span>International Wire · Read-Only Global Edition</span>
+              <span>International Wire · World News Edition</span>
             </div>
             <h1 className="font-editorial text-3xl sm:text-5xl font-semibold text-neutral-950 dark:text-white">
               Global Dispatches
             </h1>
             <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-xl mt-1">
-              Curated international coverage from Reuters, Bloomberg, The Verge, Nature, and Financial Times.
+              Curated international coverage from BBC World, The Guardian, Al Jazeera, Reuters, and NPR.
             </p>
           </div>
 

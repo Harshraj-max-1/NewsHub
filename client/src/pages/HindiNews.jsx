@@ -5,21 +5,21 @@ import NewsGrid from '../components/news/NewsGrid';
 import { FeaturedArticleSkeleton } from '../components/common/LoadingSkeleton';
 import LoadingSkeleton from '../components/common/LoadingSkeleton';
 import { EmptyState, ErrorState, Pagination } from '../components/common/CommonStates';
-import { Newspaper, Globe, Sparkles, Flag, RefreshCw } from 'lucide-react';
+import { Newspaper, Globe, Flag, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HINDI_SCOPES = [
-  { id: 'all', label: 'सभी समाचार (All Hindi)', icon: Newspaper, desc: 'देश, दुनिया, व्यापार, खेल व तकनीक' },
-  { id: 'india', label: 'भारत समाचार (National)', icon: Flag, desc: 'राष्ट्रीय एवं प्रादेशिक मुख्य खबरें' },
+  { id: 'all', label: 'सभी समाचार (All Hindi)', icon: Newspaper, desc: 'देश, विदेश, व्यापार, खेल व तकनीक की प्रमुख खबरें' },
+  { id: 'india', label: 'भारत समाचार (National)', icon: Flag, desc: 'राष्ट्रीय एवं प्रादेशिक मुख्य घटनाक्रम' },
   { id: 'world', label: 'विश्व समाचार (World)', icon: Globe, desc: 'अंतरराष्ट्रीय घटनाक्रम एवं वैश्विक विश्लेषण' }
 ];
 
 const HINDI_CATEGORIES = [
-  { id: 'all', label: 'सभी (All)' },
+  { id: 'all', label: 'सभी समाचार (All)' },
   { id: 'politics', label: 'राष्ट्रीय (National)' },
   { id: 'world', label: 'विदेश (World)' },
   { id: 'business', label: 'व्यापार (Business)' },
-  { id: 'technology', label: 'तकनीक (Tech)' },
+  { id: 'technology', label: 'तकनीक (Technology)' },
   { id: 'sports', label: 'खेल (Sports)' },
   { id: 'entertainment', label: 'मनोरंजन (Cinema)' }
 ];
@@ -85,26 +85,26 @@ export default function HindiNews() {
               <span>हिंदी संस्करण · Hindi Edition (India & World)</span>
             </div>
             <h1 className="font-editorial text-3xl sm:text-5xl font-semibold text-neutral-950 dark:text-white tracking-tight mt-1">
-              हिंदी समाचार प्रभा
+              हिंदी समाचार बुलेटिन
             </h1>
-            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-2xl mt-1">
-              बीबीसी हिंदी, एनडीटीवी खबर और गूगल न्यूज़ से सत्यापित राष्ट्रीय, अंतरराष्ट्रीय, व्यापार और तकनीक के ताज़ा समाचार।
+            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-2xl mt-1.5 leading-relaxed">
+              दैनिक भास्कर, अमर उजाला, बीबीसी हिंदी, वनइंडिया और गूगल न्यूज़ से देश-दुनिया के ताज़ा व विश्वसनीय समाचार।
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <Link
               to="/"
-              className="inline-flex items-center gap-1 px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 transition-colors"
             >
               <span>English Front</span>
               <span>🇮🇳</span>
             </Link>
             <Link
               to="/global"
-              className="inline-flex items-center gap-1 px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 transition-colors"
             >
-              <span>Global</span>
+              <span>Global Wire</span>
               <span>🌐</span>
             </Link>
           </div>
@@ -126,13 +126,13 @@ export default function HindiNews() {
                   : 'border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#161616] text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600'
               }`}
             >
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xs font-bold uppercase tracking-wider">
                   {scope.label}
                 </span>
                 <Icon size={14} className={isActive ? 'opacity-90' : 'opacity-50'} />
               </div>
-              <p className={`text-[11px] line-clamp-1 ${isActive ? 'text-neutral-300 dark:text-neutral-700' : 'text-neutral-500 dark:text-neutral-400'}`}>
+              <p className={`text-[11px] line-clamp-1 leading-normal ${isActive ? 'text-neutral-300 dark:text-neutral-700' : 'text-neutral-500 dark:text-neutral-400'}`}>
                 {scope.desc}
               </p>
             </button>
@@ -141,9 +141,9 @@ export default function HindiNews() {
       </div>
 
       {/* Category Pills */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none border-b border-neutral-200 dark:border-neutral-800">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-neutral-200 dark:border-neutral-800">
         <span className="text-[10px] uppercase font-bold text-neutral-400 tracking-wider mr-1 shrink-0">
-          विषय:
+          श्रेणी:
         </span>
         {HINDI_CATEGORIES.map((cat) => {
           const isActive = activeCategory === cat.id;
@@ -151,7 +151,7 @@ export default function HindiNews() {
             <button
               key={cat.id}
               onClick={() => handleCategoryChange(cat.id)}
-              className={`px-3 py-1 text-xs font-medium whitespace-nowrap transition-colors rounded-none border ${
+              className={`px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors rounded-none border ${
                 isActive
                   ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 font-bold'
                   : 'bg-transparent text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-800 hover:border-neutral-400'
@@ -175,7 +175,7 @@ export default function HindiNews() {
         <EmptyState
           icon={Newspaper}
           title="इस श्रेणी में कोई समाचार उपलब्ध नहीं है"
-          description="कृपया अन्य विषय चुनें या मुख्य हिंदी पृष्ठ पर वापस जाएं।"
+          description="कृपया अन्य श्रेणी चुनें या मुख्य हिंदी पृष्ठ पर वापस जाएं।"
           actionText="सभी हिंदी समाचार देखें"
           actionTo="/hindi"
         />
@@ -187,10 +187,10 @@ export default function HindiNews() {
 
           <div className="pt-2">
             <div className="flex items-center justify-between pb-3 mb-6 border-b border-neutral-200 dark:border-neutral-800">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-600 dark:text-neutral-300">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-700 dark:text-neutral-300">
                 {page === 1 ? 'ताज़ा हिंदी समाचार बुलेटिन' : `हिंदी समाचार पृष्ठ ${page}`}
               </h3>
-              <span className="text-xs text-neutral-400">
+              <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
                 {articles.length} सत्यापित खबरें
               </span>
             </div>

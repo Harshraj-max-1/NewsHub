@@ -77,7 +77,7 @@ export default function Home() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[11px] font-mono uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
-              {edition === 'india' ? '🇮🇳 India National & Regional Dispatch' : edition === 'global' ? '🌐 International Global Wire' : 'Global & National Synthesis'}
+              {edition === 'india' ? '🇮🇳 India Edition · National & Regional Wire' : edition === 'global' ? '🌐 International Wire · Global Edition' : 'Global & National Synthesis'}
             </span>
           </div>
           <h1 className="font-editorial text-3xl sm:text-5xl font-semibold text-neutral-950 dark:text-white tracking-tight">
@@ -91,7 +91,14 @@ export default function Home() {
             className="flex items-center gap-1.5 px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-900 dark:hover:border-neutral-100 text-neutral-800 dark:text-neutral-200 transition-colors"
           >
             <Globe size={13} className="text-blue-500" />
-            <span>Read Only Global News</span>
+            <span>Global Wire</span>
+          </Link>
+          <Link
+            to="/hindi"
+            className="flex items-center gap-1.5 px-3 py-1.5 border border-orange-300 dark:border-orange-800 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/40 transition-colors"
+          >
+            <span>🕉️</span>
+            <span>हिंदी समाचार</span>
           </Link>
           <Link
             to="/for-you"

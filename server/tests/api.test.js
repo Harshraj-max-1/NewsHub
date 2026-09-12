@@ -6,9 +6,11 @@ const Bookmark = require('../src/models/Bookmark');
 const ReadingHistory = require('../src/models/ReadingHistory');
 const config = require('../src/config/env');
 
+jest.setTimeout(25000);
+
 beforeAll(async () => {
   await mongoose.connect(config.mongoUri);
-});
+}, 25000);
 
 afterAll(async () => {
   // Clean test user data
