@@ -17,6 +17,7 @@ export default function ArticleCard({ article, showRecommendation = false }) {
         {/* Article Image Container */}
         <Link
           to={`/article/${articleId}`}
+          state={{ article }}
           className="block relative aspect-[16/10] overflow-hidden bg-neutral-100 dark:bg-neutral-850 shrink-0"
         >
           <img
@@ -47,13 +48,13 @@ export default function ArticleCard({ article, showRecommendation = false }) {
             </div>
           </div>
 
-          <Link to={`/article/${articleId}`} className="block group/title mb-2">
+          <Link to={`/article/${articleId}`} state={{ article }} className="block group/title mb-2.5">
             <h3 className="font-editorial text-lg sm:text-xl font-semibold text-neutral-900 dark:text-neutral-100 leading-snug group-hover/title:underline decoration-neutral-400 underline-offset-2 transition-colors line-clamp-2 min-h-[3.25rem] flex items-start">
               {article.title}
             </h3>
           </Link>
 
-          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2 leading-relaxed font-sans mb-3 flex-1">
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 line-clamp-4 leading-relaxed font-sans mb-3 flex-1">
             {article.description}
           </p>
 
@@ -79,6 +80,7 @@ export default function ArticleCard({ article, showRecommendation = false }) {
       <div className="px-4 sm:px-5 py-3 bg-neutral-50/60 dark:bg-neutral-900/40 border-t border-neutral-100 dark:border-neutral-800/60 flex items-center justify-between text-xs mt-auto">
         <Link
           to={`/article/${articleId}`}
+          state={{ article }}
           className="inline-flex items-center gap-1 text-neutral-900 dark:text-neutral-200 font-semibold uppercase tracking-wider text-[11px] hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
         >
           <span>Read Story</span>

@@ -180,11 +180,35 @@ class NewsService {
   }
 
   async getArticleById(id) {
+    // 1. Check instant in-memory store
+    const { getFromArticleStore } = require('../utils/normalizer');
+    const fromStore = getFromArticleStore(id);
+    if (fromStore) return fromStore;
+
+    // 2. Check fallback provider
     const fallback = await this.fallbackProvider.getArticleById(id);
     if (fallback) return fallback;
 
+    // 3. Search in all available English categories
     const all = await this.getAllAvailableArticles('all');
-    return all.find(a => a.id === id || a.externalId === id) || null;
+    let found = all.find(a => a.id === id || a.externalId === id);
+    if (found) return found;
+
+    // 4. Search in Hindi news feed
+    try {
+      const hindi = await this.rssProvider.getHindiNews('all', { limit: 100 });
+      found = (hindi?.articles || []).find(a => a.id === id || a.externalId === id);
+      if (found) return found;
+    } catch (err) {}
+
+    // 5. Search in top headlines
+    try {
+      const india = await this.rssProvider.getTopHeadlines({ region: 'india', limit: 80 });
+      found = (india?.articles || []).find(a => a.id === id || a.externalId === id);
+      if (found) return found;
+    } catch (err) {}
+
+    return null;
   }
 
   async getAllAvailableArticles(region = 'all') {

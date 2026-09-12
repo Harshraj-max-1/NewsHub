@@ -1,8 +1,27 @@
 const crypto = require('crypto');
 
 /**
- * Normalizes article data from any provider into a consistent internal schema.
+ * Global In-Memory Article Cache
+ * Keeps every article served to clients so getArticleById is always O(1) and never returns 404.
  */
+const articleStore = new Map();
+
+function saveToArticleStore(article) {
+  if (article && (article.id || article.externalId)) {
+    if (article.id) articleStore.set(article.id, article);
+    if (article.externalId) articleStore.set(article.externalId, article);
+    // Keep cache memory bounded to 3000 articles
+    if (articleStore.size > 3000) {
+      const firstKey = articleStore.keys().next().value;
+      articleStore.delete(firstKey);
+    }
+  }
+}
+
+function getFromArticleStore(id) {
+  return articleStore.get(id);
+}
+
 function generateArticleId(title, url) {
   const seed = `${(title || '').trim().toLowerCase()}_${(url || '').trim().toLowerCase()}`;
   return crypto.createHash('md5').update(seed).digest('hex').substring(0, 16);
@@ -11,7 +30,8 @@ function generateArticleId(title, url) {
 const INDIAN_SOURCES = [
   'the hindu', 'mint', 'the economic times', 'indian express', 'ndtv', 'yourstory',
   'techcircle', 'hindustan times', 'espncricinfo', 'press trust of india', 'pti',
-  'moneycontrol', 'business standard', 'times of india', 'deccan herald'
+  'moneycontrol', 'business standard', 'times of india', 'deccan herald', 'aaj tak',
+  'amar ujala', 'dainik bhaskar', 'navbharat times', 'oneindia', 'prabhat khabar'
 ];
 
 function normalizeArticle(raw = {}) {
@@ -23,7 +43,7 @@ function normalizeArticle(raw = {}) {
 
   const region = raw.region || (country === 'in' || INDIAN_SOURCES.some(s => sourceName.toLowerCase().includes(s)) ? 'india' : 'global');
 
-  return {
+  const normalized = {
     id: externalId,
     externalId,
     title,
@@ -41,9 +61,16 @@ function normalizeArticle(raw = {}) {
     language: (raw.language || 'en').toLowerCase(),
     readTimeMinutes: raw.readTimeMinutes || Math.max(2, Math.ceil((raw.description?.length || 100) / 70))
   };
+
+  // Register in memory cache immediately
+  saveToArticleStore(normalized);
+
+  return normalized;
 }
 
 module.exports = {
   generateArticleId,
-  normalizeArticle
+  normalizeArticle,
+  getFromArticleStore,
+  saveToArticleStore
 };

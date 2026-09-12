@@ -140,7 +140,7 @@ export default function Navbar() {
                   >
                     {link.name}
                     {link.badge && (
-                      <span className="text-[9px] bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 px-1 py-0.2 font-mono uppercase rounded-2xs">
+                      <span className="text-[9px] font-sans font-bold bg-orange-600 text-white px-1.5 py-0.5 uppercase tracking-wide rounded-sm">
                         {link.badge}
                       </span>
                     )}

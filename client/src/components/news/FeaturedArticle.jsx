@@ -16,6 +16,7 @@ export default function FeaturedArticle({ article }) {
         {/* Featured Image */}
         <Link
           to={`/article/${articleId}`}
+          state={{ article }}
           className="lg:col-span-7 block relative aspect-[16/10] overflow-hidden bg-neutral-100 dark:bg-neutral-800 group"
         >
           <img
@@ -43,7 +44,7 @@ export default function FeaturedArticle({ article }) {
               </div>
             </div>
 
-            <Link to={`/article/${articleId}`} className="group block">
+            <Link to={`/article/${articleId}`} state={{ article }} className="group block">
               <h2 className="font-editorial text-2xl sm:text-3xl lg:text-4xl font-normal text-neutral-950 dark:text-white leading-tight mb-4 group-hover:underline decoration-neutral-400 underline-offset-4">
                 {article.title}
               </h2>
@@ -57,6 +58,7 @@ export default function FeaturedArticle({ article }) {
           <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between">
             <Link
               to={`/article/${articleId}`}
+              state={{ article }}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 text-xs font-semibold uppercase tracking-wider hover:opacity-90 transition-opacity"
             >
               <span>Read Full Story</span>
