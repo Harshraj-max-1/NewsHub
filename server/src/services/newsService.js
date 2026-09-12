@@ -26,8 +26,8 @@ class NewsService {
   async getTopHeadlines(options = {}) {
     const region = options.region || 'india';
     const category = options.category || 'all';
-    const page = options.page || 1;
-    const limit = options.limit || 20;
+    const page = parseInt(options.page, 10) || 1;
+    const limit = parseInt(options.limit, 10) || 20;
 
     const cacheKey = `top_${region}_${category}_${page}_${limit}`;
     const cached = cache.get(cacheKey);
@@ -38,10 +38,9 @@ class NewsService {
     const providers = this.getActiveProviders();
     for (const provider of providers) {
       try {
-        const result = await provider.getTopHeadlines({ ...options, region });
+        const result = await provider.getTopHeadlines({ ...options, region, limit: 40 });
         if (result && result.articles && result.articles.length > 0) {
-          // Merge with a few curated stories to guarantee rich images & details
-          const fallback = await this.fallbackProvider.getTopHeadlines({ ...options, region });
+          const fallback = await this.fallbackProvider.getTopHeadlines({ ...options, region, limit: 20 });
           const combined = this.deduplicateArticles([...result.articles, ...(fallback.articles || [])]);
           
           const finalResult = {
@@ -65,8 +64,8 @@ class NewsService {
 
   async getCategoryNews(category, options = {}) {
     const region = options.region || 'all';
-    const page = options.page || 1;
-    const limit = options.limit || 20;
+    const page = parseInt(options.page, 10) || 1;
+    const limit = parseInt(options.limit, 10) || 20;
 
     const cacheKey = `category_${region}_${category}_${page}_${limit}`;
     const cached = cache.get(cacheKey);
@@ -77,7 +76,7 @@ class NewsService {
     const providers = this.getActiveProviders();
     for (const provider of providers) {
       try {
-        const result = await provider.getCategoryNews(category, { ...options, region });
+        const result = await provider.getCategoryNews(category, { ...options, region, limit: 40 });
         if (result && result.articles && result.articles.length > 0) {
           const fallback = await this.fallbackProvider.getCategoryNews(category, { ...options, region });
           const combined = this.deduplicateArticles([...result.articles, ...(fallback.articles || [])]);
@@ -145,15 +144,28 @@ class NewsService {
   }
 
   async getAllAvailableArticles(region = 'all') {
-    const [liveResult, fallbackResult] = await Promise.allSettled([
-      this.rssProvider.getTopHeadlines({ limit: 40, region }),
+    const cacheKey = `all_available_pool_${region}`;
+    const cached = cache.get(cacheKey);
+    if (cached) return cached;
+
+    // Fetch across top headlines and multiple major categories concurrently
+    const categories = ['technology', 'ai', 'business', 'startups', 'science', 'sports', 'world'];
+    const results = await Promise.allSettled([
+      this.rssProvider.getTopHeadlines({ limit: 30, region }),
+      ...categories.map(c => this.rssProvider.getCategoryNews(c, { limit: 15, region })),
       this.fallbackProvider.getTopHeadlines({ limit: 40, region })
     ]);
 
-    const liveArticles = liveResult.status === 'fulfilled' && liveResult.value ? liveResult.value.articles : [];
-    const fallbackArticles = fallbackResult.status === 'fulfilled' && fallbackResult.value ? fallbackResult.value.articles : [];
+    let combined = [];
+    results.forEach(r => {
+      if (r.status === 'fulfilled' && r.value?.articles) {
+        combined = [...combined, ...r.value.articles];
+      }
+    });
 
-    return this.deduplicateArticles([...liveArticles, ...fallbackArticles]);
+    const deduplicated = this.deduplicateArticles(combined);
+    cache.set(cacheKey, deduplicated, 300); // 5 min cache
+    return deduplicated;
   }
 
   deduplicateArticles(articles = []) {
