@@ -54,6 +54,23 @@ exports.getCategoryNews = async (req, res, next) => {
   }
 };
 
+// @desc    Get Hindi news (Supports scope: 'all' | 'india' | 'world')
+// @route   GET /api/news/hindi
+// @access  Public
+exports.getHindiNews = async (req, res, next) => {
+  try {
+    const { scope, page, limit } = req.query;
+    const data = await newsService.getHindiNews(scope, { page, limit });
+
+    res.status(200).json({
+      success: true,
+      data
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Search news with debounced filters
 // @route   GET /api/news/search
 // @access  Public

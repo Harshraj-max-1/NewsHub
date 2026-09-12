@@ -57,6 +57,29 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  googleLogin: async ({ credential, profile }) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await api.post('/auth/google', { credential, profile });
+      const { token, user } = res.data;
+
+      localStorage.setItem('newshub_token', token);
+      localStorage.setItem('newshub_user', JSON.stringify(user));
+
+      set({
+        user,
+        token,
+        isAuthenticated: true,
+        isLoading: false
+      });
+      return { success: true, user };
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Google authentication failed';
+      set({ error: msg, isLoading: false });
+      return { success: false, error: msg };
+    }
+  },
+
   logout: () => {
     localStorage.removeItem('newshub_token');
     localStorage.removeItem('newshub_user');

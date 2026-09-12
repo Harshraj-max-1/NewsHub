@@ -41,7 +41,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'India Front', path: '/' },
-    { name: 'Global News', path: '/global', icon: Globe, highlight: true },
+    { name: 'हिंदी समाचार', path: '/hindi', badge: 'New', highlight: true },
+    { name: 'Global Wire', path: '/global', icon: Globe },
     { name: 'For You', path: '/for-you', badge: 'AI', icon: Sparkles },
     { name: 'Discover', path: '/discover', icon: Compass },
     { name: 'Saved', path: '/saved', icon: Bookmark },
@@ -50,56 +51,59 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 bg-[#FAFAF9]/95 dark:bg-[#121212]/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 transition-colors">
-      {/* Top Editorial Utility Bar with India/Global Edition Switcher */}
-      <div className="border-b border-neutral-200/60 dark:border-neutral-850 px-4 sm:px-8 py-1.5 flex items-center justify-between text-[11px] text-neutral-500 dark:text-neutral-400">
-        <div className="flex items-center gap-3">
-          <span className="hidden sm:inline">{formatDate(new Date())}</span>
-          <span className="hidden sm:inline w-1 h-1 rounded-full bg-neutral-300 dark:bg-neutral-700"></span>
+      {/* Top Editorial Utility Bar with India/Hindi/Global Edition Switcher */}
+      <div className="border-b border-neutral-200/60 dark:border-neutral-850 px-3 sm:px-8 py-1.5 flex items-center justify-between text-[11px] text-neutral-500 dark:text-neutral-400">
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto scrollbar-none">
+          <span className="hidden lg:inline">{formatDate(new Date())}</span>
+          <span className="hidden lg:inline w-1 h-1 rounded-full bg-neutral-300 dark:bg-neutral-700"></span>
 
           {/* Regional Edition Selector */}
-          <div className="flex items-center gap-1 bg-neutral-200/70 dark:bg-neutral-800 p-0.5 rounded-none font-medium">
-            <button
+          <div className="flex items-center gap-0.5 bg-neutral-200/70 dark:bg-neutral-800 p-0.5 rounded-none font-medium">
+            <Link
+              to="/"
               onClick={() => setEdition('india')}
               className={`px-2 py-0.5 text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors ${
-                edition === 'india'
+                location.pathname === '/' && edition === 'india'
                   ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-bold'
                   : 'hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
               <span>🇮🇳</span>
-              <span>India Edition</span>
-            </button>
-            <button
+              <span>India</span>
+            </Link>
+            <Link
+              to="/hindi"
+              className={`px-2 py-0.5 text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors ${
+                location.pathname === '/hindi'
+                  ? 'bg-orange-600 text-white font-bold'
+                  : 'text-orange-600 dark:text-orange-400 hover:text-orange-700'
+              }`}
+            >
+              <span>🕉️</span>
+              <span>हिंदी</span>
+            </Link>
+            <Link
+              to="/global"
               onClick={() => setEdition('global')}
               className={`px-2 py-0.5 text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors ${
-                edition === 'global'
+                location.pathname === '/global'
                   ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-bold'
                   : 'hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
               <span>🌐</span>
-              <span>Global News</span>
-            </button>
-            <button
-              onClick={() => setEdition('all')}
-              className={`px-2 py-0.5 text-[10px] uppercase tracking-wider transition-colors ${
-                edition === 'all'
-                  ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-bold'
-                  : 'hover:text-neutral-900 dark:hover:text-white'
-              }`}
-            >
-              All
-            </button>
+              <span>Global</span>
+            </Link>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link
-            to="/global"
-            className="text-[10px] font-semibold uppercase tracking-wider text-neutral-800 dark:text-neutral-200 hover:underline flex items-center gap-1"
+            to="/hindi"
+            className="text-[10px] font-semibold uppercase tracking-wider text-orange-600 dark:text-orange-400 hover:underline flex items-center gap-1"
           >
-            <span>Read Only Global News</span>
-            <span className="text-[9px] bg-neutral-200 dark:bg-neutral-800 px-1 py-0.2">World</span>
+            <span>हिंदी न्यूज़ हब</span>
+            <span className="text-[9px] bg-orange-100 dark:bg-orange-950/60 px-1 py-0.2 text-orange-700 dark:text-orange-300">Live</span>
           </Link>
           <span className="hidden md:inline w-1 h-1 rounded-full bg-neutral-300 dark:bg-neutral-700"></span>
           <span className="hidden md:inline">Verified Journalism Network</span>

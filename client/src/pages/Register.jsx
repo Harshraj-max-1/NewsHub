@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { ArrowRight, AlertCircle } from 'lucide-react';
+import GoogleAuthButton from '../components/auth/GoogleAuthButton';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -93,6 +94,19 @@ export default function Register() {
             <ArrowRight size={14} />
           </button>
         </form>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-neutral-200 dark:border-neutral-800" />
+          </div>
+          <div className="relative flex justify-center text-[10px] uppercase">
+            <span className="bg-white dark:bg-[#161616] px-2 text-neutral-400 font-bold tracking-wider">
+              Or sign up with
+            </span>
+          </div>
+        </div>
+
+        <GoogleAuthButton label="Sign up with Google" />
 
         <div className="mt-8 pt-6 border-t border-neutral-100 dark:border-neutral-800/80 text-center text-xs text-neutral-500">
           <span>Already have an account? </span>

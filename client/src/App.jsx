@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 import Home from './pages/Home';
 import GlobalNews from './pages/GlobalNews';
+import HindiNews from './pages/HindiNews';
 import Discover from './pages/Discover';
 import Categories from './pages/Categories';
 import Search from './pages/Search';
@@ -22,6 +23,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
+          <Route path="hindi" element={<HindiNews />} />
           <Route path="global" element={<GlobalNews />} />
           <Route path="discover" element={<Discover />} />
           <Route path="for-you" element={<PersonalizedFeed />} />

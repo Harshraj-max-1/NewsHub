@@ -22,9 +22,16 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: {
       type: String,
-      required: [true, 'Password is required'],
       minlength: 6,
-      select: false
+      select: false,
+      required: function () {
+        return !this.googleId;
+      }
+    },
+    googleId: {
+      type: String,
+      sparse: true,
+      index: true
     },
     avatar: {
       type: String,

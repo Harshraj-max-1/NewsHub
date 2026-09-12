@@ -135,6 +135,31 @@ class NewsService {
     return { ...result, cached: false };
   }
 
+  async getHindiNews(scope = 'all', options = {}) {
+    const page = parseInt(options.page, 10) || 1;
+    const limit = parseInt(options.limit, 10) || 20;
+    const cacheKey = `hindi_${scope}_${page}_${limit}`;
+    const cached = cache.get(cacheKey);
+    if (cached) {
+      return { ...cached, cached: true };
+    }
+
+    try {
+      const result = await this.rssProvider.getHindiNews(scope, options);
+      if (result && result.articles && result.articles.length > 0) {
+        cache.set(cacheKey, result, this.cacheTtl);
+        return { ...result, cached: false };
+      }
+    } catch (err) {
+      console.warn(`[NewsService] Hindi news fetch error: ${err.message}`);
+    }
+
+    // Fallback search in hindi
+    const fallback = await this.rssProvider.getTopHeadlines({ region: 'hindi', lang: 'hi', page, limit });
+    cache.set(cacheKey, fallback, this.cacheTtl);
+    return { ...fallback, cached: false };
+  }
+
   async getArticleById(id) {
     const fallback = await this.fallbackProvider.getArticleById(id);
     if (fallback) return fallback;
