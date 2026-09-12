@@ -26,97 +26,101 @@ class NewsService {
   async getTopHeadlines(options = {}) {
     const region = options.region || 'india';
     const category = options.category || 'all';
-    const page = parseInt(options.page, 10) || 1;
-    const limit = parseInt(options.limit, 10) || 20;
+    const page = Math.max(1, parseInt(options.page, 10) || 1);
+    const limit = Math.max(1, parseInt(options.limit, 10) || 12);
 
-    const cacheKey = `top_${region}_${category}_${page}_${limit}`;
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      return { ...cached, cached: true };
-    }
+    const poolKey = `pool_top_${region}_${category}`;
+    let pool = cache.get(poolKey);
 
-    const providers = this.getActiveProviders();
-    for (const provider of providers) {
-      try {
-        const result = await provider.getTopHeadlines({ ...options, region, limit: 80 });
-        if (result && result.articles && result.articles.length > 0) {
-          let pool = result.articles;
-          // Only supplement with fallback if pool is too small
-          if (pool.length < 10) {
-            const fallback = await this.fallbackProvider.getTopHeadlines({ ...options, region, limit: 20 });
-            pool = [...pool, ...(fallback.articles || [])];
+    if (!pool || pool.length === 0) {
+      const providers = this.getActiveProviders();
+      for (const provider of providers) {
+        try {
+          const result = await provider.getTopHeadlines({ ...options, region, fetchAll: true, limit: 120 });
+          if (result && result.articles && result.articles.length > 0) {
+            pool = result.articles;
+            if (pool.length < 15) {
+              const fallback = await this.fallbackProvider.getTopHeadlines({ ...options, region, fetchAll: true, limit: 30 });
+              pool = [...pool, ...(fallback.articles || [])];
+            }
+            pool = this.deduplicateArticles(pool);
+            cache.set(poolKey, pool, this.cacheTtl);
+            break;
           }
-
-          const combined = this.deduplicateArticles(pool);
-          const startIndex = (page - 1) * limit;
-          const paginated = combined.slice(startIndex, startIndex + limit);
-
-          const finalResult = {
-            ...result,
-            totalResults: combined.length,
-            page,
-            limit,
-            articles: paginated
-          };
-
-          cache.set(cacheKey, finalResult, this.cacheTtl);
-          return { ...finalResult, cached: false };
+        } catch (err) {
+          console.warn(`[NewsService] Provider ${provider.name} failed: ${err.message}. Trying next.`);
         }
-      } catch (err) {
-        console.warn(`[NewsService] Provider ${provider.name} failed: ${err.message}. Trying next.`);
+      }
+
+      if (!pool || pool.length === 0) {
+        const fallback = await this.fallbackProvider.getTopHeadlines({ ...options, region, fetchAll: true, limit: 60 });
+        pool = this.deduplicateArticles(fallback.articles || []);
+        cache.set(poolKey, pool, this.cacheTtl);
       }
     }
 
-    const result = await this.fallbackProvider.getTopHeadlines({ ...options, region });
-    cache.set(cacheKey, result, this.cacheTtl);
-    return { ...result, cached: false };
+    const totalResults = pool.length;
+    const startIndex = (page - 1) * limit;
+    const paginated = pool.slice(startIndex, startIndex + limit);
+
+    return {
+      provider: 'NewsHubSynthesis',
+      region,
+      totalResults,
+      page,
+      limit,
+      articles: paginated
+    };
   }
 
   async getCategoryNews(category, options = {}) {
     const region = options.region || 'all';
-    const page = parseInt(options.page, 10) || 1;
-    const limit = parseInt(options.limit, 10) || 20;
+    const page = Math.max(1, parseInt(options.page, 10) || 1);
+    const limit = Math.max(1, parseInt(options.limit, 10) || 12);
 
-    const cacheKey = `category_${region}_${category}_${page}_${limit}`;
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      return { ...cached, cached: true };
-    }
+    const poolKey = `pool_cat_${region}_${category}`;
+    let pool = cache.get(poolKey);
 
-    const providers = this.getActiveProviders();
-    for (const provider of providers) {
-      try {
-        const result = await provider.getCategoryNews(category, { ...options, region, limit: 80 });
-        if (result && result.articles && result.articles.length > 0) {
-          let pool = result.articles;
-          if (pool.length < 10) {
-            const fallback = await this.fallbackProvider.getCategoryNews(category, { ...options, region });
-            pool = [...pool, ...(fallback.articles || [])];
+    if (!pool || pool.length === 0) {
+      const providers = this.getActiveProviders();
+      for (const provider of providers) {
+        try {
+          const result = await provider.getCategoryNews(category, { ...options, region, fetchAll: true, limit: 120 });
+          if (result && result.articles && result.articles.length > 0) {
+            pool = result.articles;
+            if (pool.length < 15) {
+              const fallback = await this.fallbackProvider.getCategoryNews(category, { ...options, region, fetchAll: true, limit: 30 });
+              pool = [...pool, ...(fallback.articles || [])];
+            }
+            pool = this.deduplicateArticles(pool);
+            cache.set(poolKey, pool, this.cacheTtl);
+            break;
           }
-
-          const combined = this.deduplicateArticles(pool);
-          const startIndex = (page - 1) * limit;
-          const paginated = combined.slice(startIndex, startIndex + limit);
-
-          const finalResult = {
-            ...result,
-            totalResults: combined.length,
-            page,
-            limit,
-            articles: paginated
-          };
-
-          cache.set(cacheKey, finalResult, this.cacheTtl);
-          return { ...finalResult, cached: false };
+        } catch (err) {
+          console.warn(`[NewsService] Provider ${provider.name} failed for category ${category}: ${err.message}`);
         }
-      } catch (err) {
-        console.warn(`[NewsService] Provider ${provider.name} failed for category ${category}: ${err.message}`);
+      }
+
+      if (!pool || pool.length === 0) {
+        const fallback = await this.fallbackProvider.getCategoryNews(category, { ...options, region, fetchAll: true, limit: 60 });
+        pool = this.deduplicateArticles(fallback.articles || []);
+        cache.set(poolKey, pool, this.cacheTtl);
       }
     }
 
-    const result = await this.fallbackProvider.getCategoryNews(category, { ...options, region });
-    cache.set(cacheKey, result, this.cacheTtl);
-    return { ...result, cached: false };
+    const totalResults = pool.length;
+    const startIndex = (page - 1) * limit;
+    const paginated = pool.slice(startIndex, startIndex + limit);
+
+    return {
+      provider: 'NewsHubSynthesis',
+      category,
+      region,
+      totalResults,
+      page,
+      limit,
+      articles: paginated
+    };
   }
 
   async searchNews(query, options = {}) {
@@ -155,28 +159,43 @@ class NewsService {
   }
 
   async getHindiNews(scope = 'all', options = {}) {
-    const page = parseInt(options.page, 10) || 1;
-    const limit = parseInt(options.limit, 10) || 20;
-    const cacheKey = `hindi_${scope}_${page}_${limit}`;
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      return { ...cached, cached: true };
-    }
+    const page = Math.max(1, parseInt(options.page, 10) || 1);
+    const limit = Math.max(1, parseInt(options.limit, 10) || 12);
 
-    try {
-      const result = await this.rssProvider.getHindiNews(scope, options);
-      if (result && result.articles && result.articles.length > 0) {
-        cache.set(cacheKey, result, this.cacheTtl);
-        return { ...result, cached: false };
+    const poolKey = `pool_hindi_${scope}`;
+    let pool = cache.get(poolKey);
+
+    if (!pool || pool.length === 0) {
+      try {
+        const result = await this.rssProvider.getHindiNews(scope, { ...options, fetchAll: true, limit: 120 });
+        if (result && result.articles && result.articles.length > 0) {
+          pool = this.deduplicateArticles(result.articles);
+          cache.set(poolKey, pool, this.cacheTtl);
+        }
+      } catch (err) {
+        console.warn(`[NewsService] Hindi news fetch error: ${err.message}`);
       }
-    } catch (err) {
-      console.warn(`[NewsService] Hindi news fetch error: ${err.message}`);
+
+      if (!pool || pool.length === 0) {
+        const fallback = await this.rssProvider.getTopHeadlines({ region: 'hindi', lang: 'hi', fetchAll: true, limit: 60 });
+        pool = this.deduplicateArticles(fallback?.articles || []);
+        cache.set(poolKey, pool, this.cacheTtl);
+      }
     }
 
-    // Fallback search in hindi
-    const fallback = await this.rssProvider.getTopHeadlines({ region: 'hindi', lang: 'hi', page, limit });
-    cache.set(cacheKey, fallback, this.cacheTtl);
-    return { ...fallback, cached: false };
+    const totalResults = pool.length;
+    const startIndex = (page - 1) * limit;
+    const paginated = pool.slice(startIndex, startIndex + limit);
+
+    return {
+      provider: 'NewsHubHindi',
+      scope,
+      language: 'hi',
+      totalResults,
+      page,
+      limit,
+      articles: paginated
+    };
   }
 
   async getArticleById(id) {

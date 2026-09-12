@@ -325,6 +325,17 @@ class FallbackNewsProvider extends BaseNewsProvider {
 
     // Sort latest first
     const sorted = [...candidateArticles].sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+    if (options.fetchAll) {
+      return {
+        provider: this.name,
+        region: region || 'all',
+        totalResults: candidateArticles.length,
+        page: 1,
+        limit: candidateArticles.length,
+        articles: sorted
+      };
+    }
+
     const startIndex = (page - 1) * limit;
     const paginated = sorted.slice(startIndex, startIndex + limit);
 

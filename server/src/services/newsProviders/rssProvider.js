@@ -11,57 +11,71 @@ const CATEGORY_IMAGES = {
     'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80'
   ],
   ai: [
     'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1655720828018-edd2daec9349?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1655720828018-edd2daec9349?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1676299081847-824916de030a?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=1200&q=80'
   ],
   business: [
     'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80'
   ],
   startups: [
     'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80'
   ],
   science: [
     'https://images.unsplash.com/photo-1517976487502-869f697491cf?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80'
   ],
   sports: [
     'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1200&q=80'
   ],
   health: [
     'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80'
   ],
   entertainment: [
     'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80'
   ],
   world: [
     'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80'
   ],
   politics: [
     'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1575320181282-9afab399332c?auto=format&fit=crop&w=1200&q=80'
   ],
   hindi_special: [
     'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80', // India Gate
@@ -69,34 +83,87 @@ const CATEGORY_IMAGES = {
     'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80', // Taj Mahal
     'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=1200&q=80', // Delhi
     'https://images.unsplash.com/photo-1596405344246-b329d13ffb78?auto=format&fit=crop&w=1200&q=80', // Parliament
-    'https://images.unsplash.com/photo-1506461883276-594a12b11cf3?auto=format&fit=crop&w=1200&q=80'
+    'https://images.unsplash.com/photo-1506461883276-594a12b11cf3?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1566552881560-0be86c53210f?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1200&q=80'
+  ],
+  general: [
+    'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80'
   ]
 };
 
-function getCuratedImage(category, index = 0, isHindi = false) {
-  if (isHindi && index % 2 === 0) {
+function getCuratedImage(category, index = 0, isHindi = false, seed = '') {
+  if (isHindi && (index % 2 === 0 || !category || category === 'general')) {
     const hindiList = CATEGORY_IMAGES.hindi_special;
-    return hindiList[index % hindiList.length];
+    let hash = index;
+    if (seed) {
+      for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+    }
+    return hindiList[Math.abs(hash) % hindiList.length];
   }
-  const list = CATEGORY_IMAGES[category] || CATEGORY_IMAGES.technology;
-  return list[index % list.length];
+  const list = CATEGORY_IMAGES[category] || CATEGORY_IMAGES.general;
+  let hash = index;
+  if (seed) {
+    for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+  }
+  return list[Math.abs(hash) % list.length];
 }
 
-function extractImageFromXML(itemXml, category, index, isHindi = false) {
-  // 1. Try media:content or enclosure or media:thumbnail with url attribute
-  const mediaMatch = /<(?:media:content|enclosure|media:thumbnail)[^>]+url=["']([^"']+)["']/i.exec(itemXml);
-  if (mediaMatch && mediaMatch[1] && mediaMatch[1].startsWith('http') && !mediaMatch[1].includes('1x1') && !mediaMatch[1].endsWith('.gif')) {
-    return mediaMatch[1];
+function extractImageFromXML(itemXml, category, index, isHindi = false, title = '') {
+  const candidates = [];
+
+  // 1. media:content tags with url and optional width
+  const mediaRegex = /<media:content[^>]+url=["']([^"']+)["'][^>]*>/gi;
+  let m;
+  while ((m = mediaRegex.exec(itemXml)) !== null) {
+    let url = m[1].replace(/&amp;/gi, '&').replace(/&#38;/gi, '&').trim();
+    if (url.startsWith('http') && !url.includes('1x1') && !url.endsWith('.gif')) {
+      const widthMatch = /width=["'](\d+)["']/i.exec(m[0]);
+      const width = widthMatch ? parseInt(widthMatch[1], 10) : 400;
+      candidates.push({ url, width });
+    }
   }
 
-  // 2. Try img src tag in description / content:encoded
-  const imgMatch = /<img[^>]+src=["']([^"']+)["']/i.exec(itemXml);
-  if (imgMatch && imgMatch[1] && imgMatch[1].startsWith('http') && !imgMatch[1].includes('1x1') && !imgMatch[1].endsWith('.gif')) {
-    return imgMatch[1];
+  // 2. enclosure tags
+  const encRegex = /<enclosure[^>]+url=["']([^"']+)["'][^>]*>/gi;
+  while ((m = encRegex.exec(itemXml)) !== null) {
+    let url = m[1].replace(/&amp;/gi, '&').replace(/&#38;/gi, '&').trim();
+    if (url.startsWith('http') && !url.includes('1x1') && !url.endsWith('.gif')) {
+      candidates.push({ url, width: 500 });
+    }
   }
 
-  // 3. Fallback to rich high-res curated photography pool
-  return getCuratedImage(category, index, isHindi);
+  // 3. media:thumbnail tags
+  const thumbRegex = /<media:thumbnail[^>]+url=["']([^"']+)["'][^>]*>/gi;
+  while ((m = thumbRegex.exec(itemXml)) !== null) {
+    let url = m[1].replace(/&amp;/gi, '&').replace(/&#38;/gi, '&').trim();
+    if (url.startsWith('http') && !url.includes('1x1') && !url.endsWith('.gif')) {
+      const widthMatch = /width=["'](\d+)["']/i.exec(m[0]);
+      const width = widthMatch ? parseInt(widthMatch[1], 10) : 300;
+      candidates.push({ url, width });
+    }
+  }
+
+  // 4. img src tag in description / content:encoded
+  const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
+  while ((m = imgRegex.exec(itemXml)) !== null) {
+    let url = m[1].replace(/&amp;/gi, '&').replace(/&#38;/gi, '&').trim();
+    if (url.startsWith('http') && !url.includes('1x1') && !url.endsWith('.gif')) {
+      candidates.push({ url, width: 350 });
+    }
+  }
+
+  if (candidates.length > 0) {
+    // Sort descending by width so we select the best high-definition thumbnail
+    candidates.sort((a, b) => b.width - a.width);
+    return candidates[0].url;
+  }
+
+  // 5. Fallback to rich high-res curated photography pool hashed by title/category
+  return getCuratedImage(category, index, isHindi, title);
 }
 
 class RSSNewsProvider extends BaseNewsProvider {
@@ -238,7 +305,7 @@ class RSSNewsProvider extends BaseNewsProvider {
       }
 
       // Extract real image thumbnail or use high quality contextual image
-      const imageUrl = extractImageFromXML(itemContent, category, index, isHindi);
+      const imageUrl = extractImageFromXML(itemContent, category, index, isHindi, rawTitle);
 
       articles.push(
         normalizeArticle({
@@ -300,6 +367,7 @@ class RSSNewsProvider extends BaseNewsProvider {
     const language = options.lang || (region === 'hindi' ? 'hi' : 'en');
     const limit = parseInt(options.limit, 10) || 60;
     const page = parseInt(options.page, 10) || 1;
+    const fetchAll = options.fetchAll === true;
 
     let feeds = [];
     if (language === 'hi' || region === 'hindi') {
@@ -333,6 +401,18 @@ class RSSNewsProvider extends BaseNewsProvider {
 
     try {
       const unique = await this.fetchFeeds(feeds, 'general', region === 'hindi' ? 'india' : region, language);
+      if (fetchAll) {
+        return {
+          provider: this.name,
+          region,
+          language,
+          totalResults: unique.length,
+          page: 1,
+          limit: unique.length,
+          articles: unique
+        };
+      }
+
       const startIndex = (page - 1) * limit;
       const paginated = unique.slice(startIndex, startIndex + limit);
 
@@ -354,6 +434,7 @@ class RSSNewsProvider extends BaseNewsProvider {
   async getHindiNews(scope = 'all', options = {}) {
     const limit = parseInt(options.limit, 10) || 60;
     const page = parseInt(options.page, 10) || 1;
+    const fetchAll = options.fetchAll === true;
 
     let feeds = [];
     if (scope === 'world') {
@@ -383,6 +464,18 @@ class RSSNewsProvider extends BaseNewsProvider {
 
     try {
       const unique = await this.fetchFeeds(feeds, 'general', scope === 'world' ? 'global' : 'india', 'hi');
+      if (fetchAll) {
+        return {
+          provider: this.name,
+          language: 'hi',
+          scope,
+          totalResults: unique.length,
+          page: 1,
+          limit: unique.length,
+          articles: unique
+        };
+      }
+
       const startIndex = (page - 1) * limit;
       const paginated = unique.slice(startIndex, startIndex + limit);
 
@@ -406,6 +499,7 @@ class RSSNewsProvider extends BaseNewsProvider {
     const language = options.lang || (region === 'hindi' ? 'hi' : 'en');
     const limit = parseInt(options.limit, 10) || 60;
     const page = parseInt(options.page, 10) || 1;
+    const fetchAll = options.fetchAll === true;
     const cat = (category || 'technology').toLowerCase();
 
     const topicMap = {
@@ -449,6 +543,19 @@ class RSSNewsProvider extends BaseNewsProvider {
     try {
       const unique = await this.fetchFeeds(feedUrls, cat, region === 'hindi' ? 'india' : region, language);
       const categorized = unique.map(a => ({ ...a, category: cat }));
+      if (fetchAll) {
+        return {
+          provider: this.name,
+          category: cat,
+          region,
+          language,
+          totalResults: categorized.length,
+          page: 1,
+          limit: categorized.length,
+          articles: categorized
+        };
+      }
+
       const startIndex = (page - 1) * limit;
       const paginated = categorized.slice(startIndex, startIndex + limit);
 

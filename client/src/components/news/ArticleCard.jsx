@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatTimeAgo, cleanArticleText } from '../../utils/formatters';
+import { formatTimeAgo, cleanArticleText, getEditorialFallbackImage } from '../../utils/formatters';
 import SourceBadge from '../common/SourceBadge';
 import BookmarkButton from '../common/BookmarkButton';
 import { Sparkles, Clock, ArrowRight } from 'lucide-react';
@@ -29,7 +29,7 @@ export default function ArticleCard({ article, showRecommendation = false }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80';
+              e.target.src = getEditorialFallbackImage(article.category, article.title || articleId, isHindi);
             }}
           />
           {showRecommendation && recommendation?.score && (

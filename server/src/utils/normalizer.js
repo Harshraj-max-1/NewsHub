@@ -34,6 +34,23 @@ const INDIAN_SOURCES = [
   'amar ujala', 'dainik bhaskar', 'navbharat times', 'oneindia', 'prabhat khabar'
 ];
 
+const EDITORIAL_FALLBACK_POOL = [
+  'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=80'
+];
+
+function getFallbackImage(title = '') {
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) hash = (hash * 31 + title.charCodeAt(i)) | 0;
+  return EDITORIAL_FALLBACK_POOL[Math.abs(hash) % EDITORIAL_FALLBACK_POOL.length];
+}
+
 function normalizeArticle(raw = {}) {
   const title = (raw.title || 'Untitled Article').trim();
   const articleUrl = raw.articleUrl || raw.url || raw.link || '#';
@@ -49,7 +66,7 @@ function normalizeArticle(raw = {}) {
     title,
     description: raw.description || raw.summary || raw.snippet || 'No summary available for this story.',
     content: raw.content || raw.body || '',
-    imageUrl: raw.imageUrl || raw.image || raw.urlToImage || raw.image_url || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: (raw.imageUrl || raw.image || raw.urlToImage || raw.image_url || getFallbackImage(title)).replace(/&amp;/g, '&'),
     sourceName,
     sourceUrl: raw.sourceUrl || (raw.source && raw.source.url) || '',
     articleUrl,

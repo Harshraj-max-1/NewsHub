@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatTimeAgo, cleanArticleText } from '../../utils/formatters';
+import { formatTimeAgo, cleanArticleText, getEditorialFallbackImage } from '../../utils/formatters';
 import SourceBadge from '../common/SourceBadge';
 import BookmarkButton from '../common/BookmarkButton';
 import { ArrowRight, Clock } from 'lucide-react';
@@ -27,7 +27,7 @@ export default function FeaturedArticle({ article }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80';
+              e.target.src = getEditorialFallbackImage(article.category, article.title || articleId, isHindi);
             }}
           />
           <div className="absolute top-3 left-3 bg-neutral-900 text-white text-[10px] font-bold tracking-widest uppercase px-2.5 py-1">

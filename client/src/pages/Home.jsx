@@ -40,8 +40,9 @@ export default function Home() {
 
       if (headlinesRes.status === 'fulfilled') {
         const data = headlinesRes.value.data?.data;
-        setArticles(data?.articles || []);
-        setTotalPages(Math.ceil((data?.totalResults || 12) / 12));
+        const fetched = data?.articles || [];
+        setArticles(fetched);
+        setTotalPages(Math.max(1, Math.ceil((data?.totalResults || fetched.length || 12) / 12)));
       }
 
       if (personalizedRes.status === 'fulfilled') {
@@ -122,10 +123,20 @@ export default function Home() {
       ) : error ? (
         <ErrorState onRetry={fetchHeadlines} message={error} />
       ) : articles.length === 0 ? (
-        <EmptyState
-          title={`No stories found for ${activeCategory}`}
-          description="Try switching between India and Global editions or explore other topics."
-        />
+        <div className="py-12 text-center space-y-4">
+          <EmptyState
+            title={`No stories found for ${activeCategory}`}
+            description="Try switching between India and Global editions or explore other topics."
+          />
+          {page > 1 && (
+            <button
+              onClick={() => setPage(1)}
+              className="px-4 py-2 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold uppercase tracking-wider hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+            >
+              ← Return to Page 1
+            </button>
+          )}
+        </div>
       ) : (
         <>
           {/* Featured Lead Story (Only on page 1) */}

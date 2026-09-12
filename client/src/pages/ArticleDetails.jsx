@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuthStore } from '../store/authStore';
-import { formatTimeAgo, formatDate, cleanArticleText } from '../utils/formatters';
+import { formatTimeAgo, formatDate, cleanArticleText, getEditorialFallbackImage } from '../utils/formatters';
 import SourceBadge from '../components/common/SourceBadge';
 import BookmarkButton from '../components/common/BookmarkButton';
 import NewsGrid from '../components/news/NewsGrid';
@@ -197,7 +197,7 @@ export default function ArticleDetails() {
           className="w-full h-full object-cover"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80';
+            e.target.src = getEditorialFallbackImage(article.category, article.title || article.id, isHindi);
           }}
         />
         <div className="absolute bottom-2 right-2 bg-neutral-900/80 text-white text-[10px] px-2 py-0.5 font-mono">
