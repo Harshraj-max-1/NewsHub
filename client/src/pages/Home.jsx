@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import api from '../services/api';
 import { useEditionStore } from '../store/editionStore';
+import { useAuthStore } from '../store/authStore';
 import FeaturedArticle from '../components/news/FeaturedArticle';
 import ArticleCard from '../components/news/ArticleCard';
 import NewsGrid from '../components/news/NewsGrid';
@@ -10,14 +11,16 @@ import { FeaturedArticleSkeleton } from '../components/common/LoadingSkeleton';
 import LoadingSkeleton from '../components/common/LoadingSkeleton';
 import { EmptyState, ErrorState, Pagination } from '../components/common/CommonStates';
 import { Link } from 'react-router-dom';
-import { Sparkles, TrendingUp, Compass, ArrowRight, Globe } from 'lucide-react';
+import { Sparkles, TrendingUp, Compass, ArrowRight, Globe, SlidersHorizontal } from 'lucide-react';
 import { INDIA_SOURCES, GLOBAL_SOURCES } from '../utils/formatters';
 
 export default function Home() {
   const { edition, setEdition } = useEditionStore();
+  const { isAuthenticated, user } = useAuthStore();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [articles, setArticles] = useState([]);
+  const [personalized, setPersonalized] = useState([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -30,10 +33,20 @@ export default function Home() {
         ? `/news/top?region=${edition}&page=${page}&limit=12`
         : `/news/category/${activeCategory}?region=${edition}&page=${page}&limit=12`;
 
-      const res = await api.get(endpoint);
-      const data = res.data?.data;
-      setArticles(data?.articles || []);
-      setTotalPages(Math.ceil((data?.totalResults || 12) / 12));
+      const [headlinesRes, personalizedRes] = await Promise.allSettled([
+        api.get(endpoint),
+        api.get(`/news/personalized?region=${edition}&limit=3`)
+      ]);
+
+      if (headlinesRes.status === 'fulfilled') {
+        const data = headlinesRes.value.data?.data;
+        setArticles(data?.articles || []);
+        setTotalPages(Math.ceil((data?.totalResults || 12) / 12));
+      }
+
+      if (personalizedRes.status === 'fulfilled') {
+        setPersonalized(personalizedRes.value.data?.data?.articles || []);
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch stories.');
     } finally {
@@ -55,7 +68,7 @@ export default function Home() {
   const remaining = articles.slice(3);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-10 animate-in fade-in duration-300">
       {/* Breaking News Ticker */}
       <BreakingTicker articles={articles} />
 
@@ -82,9 +95,9 @@ export default function Home() {
           </Link>
           <Link
             to="/for-you"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-850 hover:bg-neutral-200 dark:hover:bg-neutral-750 text-neutral-900 dark:text-neutral-100 transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-opacity"
           >
-            <Sparkles size={13} className="text-amber-500" />
+            <Sparkles size={13} className="text-amber-400 dark:text-amber-600 fill-current" />
             <span>Personalized For You</span>
           </Link>
         </div>
@@ -111,6 +124,43 @@ export default function Home() {
           {/* Featured Lead Story (Only on page 1) */}
           {page === 1 && featured && (
             <FeaturedArticle article={featured} />
+          )}
+
+          {/* ================= PROMINENT "CURATED FOR YOU" SECTION ================= */}
+          {page === 1 && personalized.length > 0 && (
+            <section className="p-6 sm:p-7 bg-neutral-100/80 dark:bg-[#181818] border border-neutral-300/80 dark:border-neutral-800 my-8">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-neutral-300 dark:border-neutral-750 gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-1.5 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900">
+                    <Sparkles size={16} className="text-amber-400 dark:text-amber-600 fill-amber-400 dark:fill-amber-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-bold uppercase tracking-widest text-neutral-950 dark:text-white">
+                      Curated For You · Algorithmic Recommendations
+                    </h2>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Tailored based on your reading habits, followed topics, and source trust.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Link
+                    to="/for-you"
+                    className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 hover:underline"
+                  >
+                    <span>View All Recommendations</span>
+                    <ArrowRight size={13} />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {personalized.map((art) => (
+                  <ArticleCard key={art.id || art.externalId} article={art} showRecommendation={true} />
+                ))}
+              </div>
+            </section>
           )}
 
           {/* Secondary Lead Row on Page 1 */}

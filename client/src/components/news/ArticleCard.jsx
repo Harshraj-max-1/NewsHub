@@ -12,7 +12,7 @@ export default function ArticleCard({ article, showRecommendation = false }) {
   const recommendation = article.recommendation;
 
   return (
-    <article className="group bg-white dark:bg-[#161616] border border-neutral-200/90 dark:border-neutral-800/80 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-200 flex flex-col justify-between overflow-hidden">
+    <article className="group bg-white dark:bg-[#161616] border border-neutral-200/90 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-200 flex flex-col justify-between overflow-hidden relative">
       <div>
         {/* Article Image Container */}
         <Link
@@ -30,8 +30,8 @@ export default function ArticleCard({ article, showRecommendation = false }) {
             }}
           />
           {showRecommendation && recommendation?.score && (
-            <div className="absolute top-2 left-2 bg-neutral-900/90 backdrop-blur-xs text-white text-[10px] font-semibold tracking-wider uppercase px-2 py-1 flex items-center gap-1">
-              <Sparkles size={11} className="text-amber-400" />
+            <div className="absolute top-2.5 left-2.5 bg-neutral-950/90 text-white dark:bg-white dark:text-neutral-950 text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 flex items-center gap-1.5 shadow-md border border-white/20 dark:border-neutral-800">
+              <Sparkles size={12} className="text-amber-400 dark:text-amber-600 fill-amber-400 dark:fill-amber-600" />
               <span>{recommendation.score}% Match</span>
             </div>
           )}
@@ -60,11 +60,11 @@ export default function ArticleCard({ article, showRecommendation = false }) {
           {/* Recommendation Reasons Breakdown if present */}
           {showRecommendation && recommendation?.reasons && recommendation.reasons.length > 0 && (
             <div className="mt-3 pt-2.5 border-t border-dashed border-neutral-200 dark:border-neutral-800">
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-1.5">
                 {recommendation.reasons.slice(0, 2).map((reason, idx) => (
                   <span
                     key={idx}
-                    className="text-[10px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 px-1.5 py-0.5 rounded-none"
+                    className="text-[10px] font-semibold bg-neutral-100 dark:bg-neutral-800/90 text-neutral-800 dark:text-neutral-200 px-2 py-0.5 border border-neutral-200 dark:border-neutral-700"
                   >
                     {reason}
                   </span>
