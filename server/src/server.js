@@ -4,6 +4,9 @@ const connectDB = require('./config/db');
 
 // Connect to MongoDB
 connectDB().then(() => {
+  const cache = require('./config/cache');
+  cache.flush();
+
   const server = app.listen(config.port, () => {
     console.log(`\n==============================================`);
     console.log(`  NewsHub API Server running on port ${config.port}`);

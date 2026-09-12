@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatTimeAgo } from '../../utils/formatters';
+import { formatTimeAgo, cleanArticleText } from '../../utils/formatters';
 import SourceBadge from '../common/SourceBadge';
 import BookmarkButton from '../common/BookmarkButton';
 import { Sparkles, Clock, ArrowRight } from 'lucide-react';
@@ -10,6 +10,8 @@ export default function ArticleCard({ article, showRecommendation = false }) {
 
   const articleId = article.id || article.externalId;
   const recommendation = article.recommendation;
+  const isHindi = article.language === 'hi' || article.region === 'hindi';
+  const cleanDesc = cleanArticleText(article.description, article.title, isHindi);
 
   return (
     <article className="group bg-white dark:bg-[#161616] border border-neutral-200/90 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-200 flex flex-col justify-between overflow-hidden relative h-full">
@@ -55,7 +57,7 @@ export default function ArticleCard({ article, showRecommendation = false }) {
           </Link>
 
           <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 line-clamp-4 leading-relaxed font-sans mb-3 flex-1">
-            {article.description}
+            {cleanDesc}
           </p>
 
           {/* Recommendation Reasons Breakdown if present */}

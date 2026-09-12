@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatTimeAgo } from '../../utils/formatters';
+import { formatTimeAgo, cleanArticleText } from '../../utils/formatters';
 import SourceBadge from '../common/SourceBadge';
 import BookmarkButton from '../common/BookmarkButton';
 import { ArrowRight, Clock } from 'lucide-react';
@@ -9,6 +9,8 @@ export default function FeaturedArticle({ article }) {
   if (!article) return null;
 
   const articleId = article.id || article.externalId;
+  const isHindi = article.language === 'hi' || article.region === 'hindi';
+  const cleanDesc = cleanArticleText(article.description, article.title, isHindi);
 
   return (
     <div className="bg-white dark:bg-[#161616] border border-neutral-200/90 dark:border-neutral-800/90 p-5 sm:p-7 mb-10">
@@ -51,7 +53,7 @@ export default function FeaturedArticle({ article }) {
             </Link>
 
             <p className="text-neutral-600 dark:text-neutral-300 text-sm sm:text-base leading-relaxed font-sans line-clamp-4 mb-6">
-              {article.description}
+              {cleanDesc}
             </p>
           </div>
 

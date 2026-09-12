@@ -154,32 +154,34 @@ class RSSNewsProvider extends BaseNewsProvider {
 
       // Extract description & sanitize HTML and all entities
       const descMatch = /<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i.exec(itemContent);
-      let description = descMatch ? descMatch[1] : '';
+      let rawDesc = descMatch ? descMatch[1] : '';
       
-      description = description
-        .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
-        .replace(/<font[^>]*>[\s\S]*?<\/font>/gi, '')
-        .replace(/<ol[^>]*>[\s\S]*?<\/ol>/gi, '')
-        .replace(/<ul[^>]*>[\s\S]*?<\/ul>/gi, '')
-        .replace(/<li[^>]*>[\s\S]*?<\/li>/gi, '')
-        .replace(/<a[^>]*>[\s\S]*?<\/a>/gi, '')
-        .replace(/<[^>]+>/g, ' ')
-        .replace(/&nbsp;/gi, ' ')
-        .replace(/&amp;/gi, '&')
-        .replace(/&lt;/gi, '<')
-        .replace(/&gt;/gi, '>')
-        .replace(/&quot;/gi, '"')
-        .replace(/&#39;/gi, "'")
-        .replace(/&apos;/gi, "'")
-        .replace(/&mdash;/gi, '—')
-        .replace(/&ndash;/gi, '–')
-        .replace(/&bull;/gi, '•')
-        .replace(/&hellip;/gi, '...')
-        .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
-        .replace(/Google समाचार पर.*$/gi, '')
-        .replace(/Google News.*$/gi, '')
-        .replace(/\s+/g, ' ')
-        .trim();
+      let description = '';
+      // If it is a Google News link dump or contains raw anchor lists, discard raw HTML completely
+      const isLinkDump = rawDesc.includes('&lt;ol&gt;') || rawDesc.includes('<ol>') || rawDesc.includes('&lt;li&gt;') || rawDesc.includes('news.google.com/rss/articles');
+
+      if (!isLinkDump) {
+        description = rawDesc
+          .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/&lt;/gi, '<')
+          .replace(/&gt;/gi, '>')
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/&nbsp;/gi, ' ')
+          .replace(/&amp;/gi, '&')
+          .replace(/&quot;/gi, '"')
+          .replace(/&#39;/gi, "'")
+          .replace(/&apos;/gi, "'")
+          .replace(/&mdash;/gi, '—')
+          .replace(/&ndash;/gi, '–')
+          .replace(/&bull;/gi, '•')
+          .replace(/&hellip;/gi, '...')
+          .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
+          .replace(/Google समाचार पर.*$/gi, '')
+          .replace(/Google News.*$/gi, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
 
       // Ensure 4-5 substantial lines of readable text
       if (!description || description.length < 50) {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuthStore } from '../store/authStore';
-import { formatTimeAgo, formatDate } from '../utils/formatters';
+import { formatTimeAgo, formatDate, cleanArticleText } from '../utils/formatters';
 import SourceBadge from '../components/common/SourceBadge';
 import BookmarkButton from '../components/common/BookmarkButton';
 import NewsGrid from '../components/news/NewsGrid';
@@ -109,21 +109,27 @@ export default function ArticleDetails() {
     );
   }
 
-  // Generate 4-5 substantial paragraphs if content is single line or short
+  // Generate 4-5 substantial clean paragraphs
   const isHindi = article.language === 'hi' || article.region === 'hindi';
-  const paragraphs = article.content && article.content.includes('\n\n')
-    ? article.content.split('\n\n').filter(Boolean)
+  const cleanTitle = cleanArticleText(article.title, '', isHindi);
+  const cleanDesc = cleanArticleText(article.description, cleanTitle, isHindi);
+
+  // Check if content has raw html/google news link dump
+  const hasRawHtmlDump = article.content && (article.content.includes('<ol') || article.content.includes('&lt;ol') || article.content.includes('news.google.com'));
+
+  const paragraphs = (!hasRawHtmlDump && article.content && article.content.includes('\n\n'))
+    ? article.content.split('\n\n').map(p => cleanArticleText(p, cleanTitle, isHindi)).filter(p => p.length > 20)
     : isHindi
     ? [
-        `${article.title}। ${article.sourceName} की ताज़ा और विस्तृत रिपोर्ट के अनुसार, इस पूरे मामले पर राष्ट्रीय और अंतरराष्ट्रीय स्तर पर गंभीर चर्चा शुरू हो गई है।`,
-        article.description,
+        `${cleanTitle}। ${article.sourceName} की ताज़ा और विस्तृत रिपोर्ट के अनुसार, इस पूरे मामले पर राष्ट्रीय और अंतरराष्ट्रीय स्तर पर गंभीर चर्चा शुरू हो गई है।`,
+        cleanDesc,
         `विशेषज्ञों और विश्लेषकों का मानना है कि इस घटनाक्रम के परिणाम दूरगामी हो सकते हैं। प्रशासनिक और आधिकारिक स्तर पर स्थिति की लगातार निगरानी की जा रही है तथा संबंधित पक्षों द्वारा शीघ्र ही अग्रिम दिशा-निर्देश जारी किए जाने की उम्मीद है।`,
         `इस विषय से जुड़े सभी महत्वपूर्ण तथ्यों और दस्तावेज़ों की पुष्टि की जा रही है ताकि जनता तक निष्पक्ष और सटीक जानकारी उपलब्ध कराई जा सके। स्थानीय प्रतिनिधियों ने भी इस संदर्भ में अपनी प्रतिक्रिया व्यक्त की है।`,
         `न्यूज़हब (NewsHub) पर यह समाचार मूल प्रकाशक (${article.sourceName}) के सौजन्य से संकलित किया गया है। संपूर्ण और विस्तृत मूल रिपोर्ट पढ़ने के लिए नीचे दिए गए प्रकाशक के आधिकारिक लिंक पर क्लिक करें।`
       ]
     : [
-        `${article.title}. According to verified reports published by ${article.sourceName}, key stakeholders and institutional observers are closely monitoring the unfolding situation with significant regional and international attention.`,
-        article.description,
+        `${cleanTitle}. According to verified reports published by ${article.sourceName}, key stakeholders and institutional observers are closely monitoring the unfolding situation with significant regional and international attention.`,
+        cleanDesc,
         `Industry analysts and policy strategists indicate that these latest developments reflect broader macroeconomic and geopolitical shifts. The immediate implications are expected to influence strategic planning and operational coordination over the coming weeks.`,
         `Institutional representatives have emphasized the importance of verified factual documentation and cross-border cooperation. Observers highlight that timely regulatory clarity and transparent reporting remain pivotal to sustaining public confidence.`,
         `NewsHub aggregates and synthesizes live news dispatches with full attribution to original publishers. To explore the complete unedited documentation and multimedia coverage, please visit the official dispatch from ${article.sourceName} below.`
@@ -153,11 +159,11 @@ export default function ArticleDetails() {
         </div>
 
         <h1 className="font-editorial text-2xl sm:text-4xl md:text-5xl font-semibold text-neutral-950 dark:text-white leading-tight">
-          {article.title}
+          {cleanTitle}
         </h1>
 
         <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed font-sans">
-          {article.description}
+          {cleanDesc}
         </p>
 
         {/* Metadata & Actions Bar */}
